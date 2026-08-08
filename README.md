@@ -699,4 +699,3 @@ This demonstrates how a very small JavaScript exercise can be progressively deve
 
 ## 📜 License
 
-MIT License — free to use, modify and share.
