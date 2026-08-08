@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced JavaScript Counter</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+    }
+
+    .counter-container {
+      width: 90%;
+      max-width: 420px;
+      padding: 40px;
+      text-align: center;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    #count {
+      margin: 25px 0;
+      font-size: 5rem;
+      transition: transform 0.2s ease, color 0.3s ease;
+    }
+
+    #count.bump {
+      transform: scale(1.25);
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      min-width: 80px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    button:active {
+      transform: scale(0.96);
+    }
+
+    #inc {
+      background: #198754;
+      color: white;
+    }
+
+    #dec {
+      background: #dc3545;
+      color: white;
+    }
+
+    #reset {
+      background: #343a40;
+      color: white;
+    }
+
+    .help {
+      margin-top: 25px;
+      color: #666;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="counter-container">
+
+    <h1>Advanced JavaScript Counter</h1>
+
+    <h2 id="count" aria-live="polite">0</h2>
+
+    <div class="buttons">
+      <button id="dec" type="button" aria-label="Decrease counter">−</button>
+      <button id="reset" type="button" aria-label="Reset counter">Reset</button>
+      <button id="inc" type="button" aria-label="Increase counter">+</button>
+    </div>
+
+    <div class="help">
+      Keyboard shortcuts:<br>
+      <strong>+</strong> or <strong>Arrow Up</strong> = increase<br>
+      <strong>−</strong> or <strong>Arrow Down</strong> = decrease<br>
+      <strong>R</strong> or <strong>Escape</strong> = reset
+    </div>
+
+  </main>
+
+  <script>
+    const savedCount = Number.parseInt(localStorage.getItem("count"), 10);
+
+    let count = Number.isNaN(savedCount) ? 0 : savedCount;
+
+    const display = document.getElementById("count");
+    const increaseButton = document.getElementById("inc");
+    const decreaseButton = document.getElementById("dec");
+    const resetButton = document.getElementById("reset");
+
+    function animate() {
+      display.classList.remove("bump");
+
+      void display.offsetWidth;
+
+      display.classList.add("bump");
+
+      setTimeout(() => {
+        display.classList.remove("bump");
+      }, 200);
+    }
+
+    function updateDisplay() {
+      display.textContent = count;
+
+      if (count > 0) {
+        display.style.color = "green";
+      } else if (count < 0) {
+        display.style.color = "red";
+      } else {
+        display.style.color = "black";
+      }
+
+      localStorage.setItem("count", count);
+
+      animate();
+    }
+
+    function increase() {
+      count++;
+      updateDisplay();
+    }
+
+    function decrease() {
+      count--;
+      updateDisplay();
+    }
+
+    function reset() {
+      count = 0;
+      updateDisplay();
+    }
+
+    increaseButton.addEventListener("click", increase);
+    decreaseButton.addEventListener("click", decrease);
+    resetButton.addEventListener("click", reset);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "+" || event.key === "ArrowUp") {
+        increase();
+      }
+
+      if (event.key === "-" || event.key === "ArrowDown") {
+        decrease();
+      }
+
+      if (event.key.toLowerCase() === "r" || event.key === "Escape") {
+        reset();
+      }
+    });
+
+    updateDisplay();
+  </script>
+
+</body>
+</html>
