@@ -1,6 +1,5 @@
 # 🚀 Advanced JavaScript Counter
 
-A progression-based JavaScript project that evolves the classic counter exercise into a more polished frontend application.
 
 The project demonstrates practical JavaScript concepts including **DOM manipulation, event handling, persistent browser storage, keyboard controls, dynamic styling, animations, and accessibility improvements**.
 
@@ -10,7 +9,9 @@ It is designed both as a learning project and as a demonstration of frontend dev
 
 ## 🌐 Live Demo
 
-GitHub Pages deployment coming next.
+🚀 **[Launch the Advanced JavaScript Counter](https://abla86.github.io/advanced-javascript-counter/)**
+
+The application is deployed with GitHub Pages and can be used directly in any modern web browser. No installation is required.
 
 ---
 
@@ -395,7 +396,8 @@ JavaScript
 DOM API
 Web Storage API (localStorage)
 ARIA
-Planned / Learning Roadmap
+
+Planned / Learning Roadmap:
 ES6 Modules
 Automated testing
 React
@@ -431,7 +433,7 @@ in a modern web browser.
 
 No installation, package manager or external dependencies are required for the current version.
 
-🧭 Roadmap
+🧭 Roadmap:
  Basic counter concept
  Increment and decrement
  Reset functionality
@@ -448,8 +450,9 @@ No installation, package manager or external dependencies are required for the c
  Automated unit tests
  React implementation
  TypeScript rewrite
- GitHub Pages live demo
+ - [x] GitHub Pages live demo
  GitHub Actions CI pipeline
+
 🎯 Project Purpose
 
 This project is part of a practical frontend learning portfolio.
