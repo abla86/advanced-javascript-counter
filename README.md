@@ -1,468 +1,702 @@
 # 🚀 Advanced JavaScript Counter
 
+A feature-rich, dependency-free JavaScript counter application demonstrating modern frontend development with **reusable components, persistent state, keyboard interaction, responsive design, accessibility, animations, statistics, and JSON data management**.
 
-The project demonstrates practical JavaScript concepts including **DOM manipulation, event handling, persistent browser storage, keyboard controls, dynamic styling, animations, and accessibility improvements**.
-
-It is designed both as a learning project and as a demonstration of frontend development skills.
-
----
+The project expands the classic beginner counter into a complete interactive frontend application while remaining entirely built with **HTML5, CSS3, and vanilla JavaScript**.
 
 ## 🌐 Live Demo
 
-🚀 **[Launch the Advanced JavaScript Counter](https://abla86.github.io/advanced-javascript-counter/)**
+**[Launch Advanced JavaScript Counter](https://abla86.github.io/advanced-javascript-counter/)**
 
-The application is deployed with GitHub Pages and can be used directly in any modern web browser. No installation is required.
+The application is deployed with **GitHub Pages** and runs directly in a modern web browser.
 
----
-
-## ✨ Current Features
-
-The current version includes:
-
-- ➕ Increase counter
-- ➖ Decrease counter
-- 🔄 Reset counter
-- 🔢 Support for positive and negative values
-- 💾 Persistent state using `localStorage`
-- ⌨️ Keyboard shortcuts
-- 🎨 Dynamic color changes
-- ✨ Animated number changes
-- 🖱️ Interactive button effects
-- ♿ ARIA labels and live counter updates
-- 📱 Responsive layout
-- ⚡ Vanilla JavaScript with no external dependencies
+No installation, package manager, framework, build process, or external dependency is required.
 
 ---
 
-## 🖥️ How It Works
+## ✨ Features
 
-The application maintains the current counter value in JavaScript and updates the DOM whenever the value changes.
+### Multiple Independent Counters
 
-The value is also stored using the browser's **Web Storage API**, allowing the counter to survive page reloads.
+The application contains three independent counters:
+
+* Primary Counter
+* Secondary Counter
+* Third Counter
+
+Each counter maintains its own state and persistent browser storage.
+
+Every counter supports:
+
+* Increase
+* Decrease
+* Reset
+* Positive values
+* Negative values
+* Independent persistence
+* Keyboard interaction
+* Dynamic styling
+* Animated value changes
+
+---
+
+## 🧱 Reusable Counter Architecture
+
+Instead of duplicating JavaScript for every counter, the application uses a reusable `Counter` class.
 
 ```javascript
-const savedCount = Number.parseInt(
-  localStorage.getItem("count"),
-  10
-);
-
-let count = Number.isNaN(savedCount)
-  ? 0
-  : savedCount;
-
-  Whenever the counter changes, the application:
-
-Updates the displayed value
-Changes the number color
-Saves the new value to localStorage
-Triggers a short animation
-⌨️ Keyboard Controls
-
-The counter can be controlled without using the mouse.
-
-Key	Action
-+	Increase
-Arrow Up	Increase
--	Decrease
-Arrow Down	Decrease
-R	Reset
-Escape	Reset
-
-Keyboard events are handled using JavaScript event listeners:
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "+" || event.key === "ArrowUp") {
-    increase();
+class Counter {
+  constructor({
+    id,
+    title,
+    description,
+    start = 0
+  }) {
+    this.id = id;
+    this.title = title;
+    this.description = description;
+    this.value = start;
   }
 
-  if (event.key === "-" || event.key === "ArrowDown") {
-    decrease();
+  increase() {
+    this.value += 1;
+    this.updateDisplay();
   }
 
-  if (
-    event.key.toLowerCase() === "r" ||
-    event.key === "Escape"
-  ) {
-    reset();
+  decrease() {
+    this.value -= 1;
+    this.updateDisplay();
   }
-});
-🎨 Dynamic Styling
 
-The counter provides visual feedback based on its value:
-
-Green — positive value
-Red — negative value
-Black — zero
-if (count > 0) {
-  display.style.color = "green";
-} else if (count < 0) {
-  display.style.color = "red";
-} else {
-  display.style.color = "black";
+  reset() {
+    this.value = 0;
+    this.updateDisplay();
+  }
 }
+```
 
-This provides immediate visual feedback while demonstrating dynamic DOM styling.
+Counter instances are generated from configuration data:
 
-✨ Animation
+```javascript
+const COUNTER_CONFIG = [
+  {
+    id: "primary",
+    title: "Primary Counter",
+    description: "Main persistent counter.",
+    start: 0
+  },
+  {
+    id: "secondary",
+    title: "Secondary Counter",
+    description: "Independent persistent state.",
+    start: 0
+  },
+  {
+    id: "third",
+    title: "Third Counter",
+    description: "Reusable component demonstration.",
+    start: 0
+  }
+];
+```
 
-Each counter change triggers a small scale animation.
+This demonstrates:
 
-#count {
+* Object-oriented JavaScript
+* Reusable application logic
+* Component-like architecture
+* Configuration-driven UI generation
+* Independent application state
+* Dynamic DOM creation
+
+---
+
+## 💾 Persistent State with LocalStorage
+
+Every counter receives an independent LocalStorage key:
+
+```javascript
+this.storageKey =
+  `advanced-counter:${id}`;
+```
+
+Values are stored automatically:
+
+```javascript
+localStorage.setItem(
+  this.storageKey,
+  String(this.value)
+);
+```
+
+When the application is reopened or refreshed, previously stored counter values are restored.
+
+This demonstrates practical use of the browser **Web Storage API** without requiring a database or backend.
+
+---
+
+## ⌨️ Keyboard Controls
+
+The application can be controlled using either the mouse or keyboard.
+
+Click a counter or move keyboard focus into it to make that counter active.
+
+| Key          | Action                  |
+| ------------ | ----------------------- |
+| `+`          | Increase active counter |
+| `Arrow Up`   | Increase active counter |
+| `-`          | Decrease active counter |
+| `Arrow Down` | Decrease active counter |
+| `R`          | Reset active counter    |
+| `Escape`     | Reset active counter    |
+
+Keyboard interaction is handled using event listeners:
+
+```javascript
+document.addEventListener(
+  "keydown",
+  (event) => {
+    const counter =
+      getActiveCounter();
+
+    if (!counter) {
+      return;
+    }
+
+    if (
+      event.key === "+" ||
+      event.key === "ArrowUp"
+    ) {
+      event.preventDefault();
+      counter.increase();
+    }
+
+    if (
+      event.key === "-" ||
+      event.key === "ArrowDown"
+    ) {
+      event.preventDefault();
+      counter.decrease();
+    }
+  }
+);
+```
+
+This demonstrates:
+
+* Keyboard events
+* Active component state
+* Accessible interaction
+* Event-driven application behaviour
+
+---
+
+## 🎨 Dynamic Styling
+
+Counter values automatically change colour according to their current state:
+
+* **Green** — positive
+* **Red** — negative
+* **Neutral** — zero
+
+```javascript
+if (this.value > 0) {
+  this.display.style.color =
+    "var(--positive)";
+} else if (this.value < 0) {
+  this.display.style.color =
+    "var(--negative)";
+} else {
+  this.display.style.color =
+    "var(--neutral)";
+}
+```
+
+The currently active counter also receives a visible highlight.
+
+---
+
+## ✨ Animations
+
+Counter values animate whenever they change.
+
+```css
+.count {
   transition:
     transform 0.2s ease,
     color 0.3s ease;
 }
 
-#count.bump {
-  transform: scale(1.25);
+.count.bump {
+  transform: scale(1.18);
 }
+```
 
-JavaScript temporarily applies the animation class whenever the value changes.
+JavaScript triggers the animation dynamically:
 
-This demonstrates the interaction between JavaScript state changes and CSS transitions.
+```javascript
+animate() {
+  this.display.classList.remove(
+    "bump"
+  );
 
-💾 LocalStorage Persistence
+  void this.display.offsetWidth;
 
-The application stores the current counter value in the browser:
+  this.display.classList.add(
+    "bump"
+  );
+}
+```
 
-localStorage.setItem("count", count);
+This demonstrates interaction between JavaScript application state and CSS transitions.
 
-When the page is reopened or refreshed, the stored value is restored.
+---
 
-This demonstrates basic client-side persistence without requiring a database or backend.
+## 📊 Counter Dashboard
 
-♿ Accessibility
+The application includes a live dashboard that automatically calculates information across all counters.
 
-Accessibility improvements include:
+The dashboard displays:
 
-<h2 id="count" aria-live="polite">0</h2>
+* **Total value**
+* **Highest counter value**
+* **Lowest counter value**
+* **Changes during the current session**
 
-<button
-  id="dec"
-  aria-label="Decrease counter">
-  −
-</button>
+Statistics update automatically whenever counter state changes.
 
-<button
-  id="reset"
-  aria-label="Reset counter">
-  Reset
-</button>
+```javascript
+const total =
+  values.reduce(
+    (sum, value) =>
+      sum + value,
+    0
+  );
 
-<button
-  id="inc"
-  aria-label="Increase counter">
-  +
-</button>
+totalValueElement.textContent =
+  total;
 
-The project currently demonstrates:
+highestValueElement.textContent =
+  Math.max(...values);
 
-ARIA labels
-Live region updates
-Native HTML buttons
-Keyboard interaction
-Clear visual feedback
+lowestValueElement.textContent =
+  Math.min(...values);
+```
 
-These features improve accessibility while introducing practical accessibility concepts.
+This demonstrates:
 
-🌱 Learning Progression
+* Array transformations
+* `reduce()`
+* Spread syntax
+* Derived application state
+* Real-time DOM updates
 
-The project builds on the classic beginner JavaScript counter.
+---
 
-1️⃣ Basic Counter
+## 🔄 Reset All
 
-A basic counter introduces:
+In addition to resetting counters individually, the dashboard provides a global **Reset All** control.
 
-Variables
-Functions
-DOM manipulation
-Button interaction
+This resets every counter to zero and updates:
 
-Example:
+* Counter displays
+* LocalStorage
+* Dashboard statistics
+* Status feedback
 
+---
+
+## 📤 JSON Export
+
+Current counter data can be exported as a JSON file directly from the browser.
+
+The exported data contains:
+
+* Application name
+* Data format version
+* Export timestamp
+* Counter IDs
+* Counter names
+* Current values
+
+Example structure:
+
+```json
+{
+  "application": "Advanced JavaScript Counter",
+  "version": 1,
+  "exportedAt": "2026-08-08T12:00:00.000Z",
+  "counters": [
+    {
+      "id": "primary",
+      "title": "Primary Counter",
+      "value": 5
+    }
+  ]
+}
+```
+
+The export is generated entirely client-side using:
+
+* `JSON.stringify()`
+* `Blob`
+* `URL.createObjectURL()`
+* Dynamic download links
+
+No server is required.
+
+---
+
+## 📥 JSON Import
+
+Previously exported counter data can be imported back into the application.
+
+The application:
+
+1. Reads the selected file
+2. Parses the JSON
+3. Checks for a valid counter collection
+4. Matches counter IDs
+5. Validates numeric values
+6. Restores matching counters
+7. Updates LocalStorage
+8. Refreshes dashboard statistics
+
+Invalid JSON is handled without crashing the application.
+
+```javascript
+try {
+  const text =
+    await file.text();
+
+  const data =
+    JSON.parse(text);
+
+  if (
+    !Array.isArray(
+      data.counters
+    )
+  ) {
+    throw new Error(
+      "Invalid counter file."
+    );
+  }
+} catch (error) {
+  console.error(error);
+}
+```
+
+This demonstrates:
+
+* File API
+* Asynchronous JavaScript
+* `async` / `await`
+* JSON parsing
+* Input validation
+* Error handling
+
+---
+
+## 🌗 Automatic Light and Dark Mode
+
+The interface automatically follows the operating system or browser colour preference.
+
+```css
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111827;
+    --surface: #1f2937;
+    --text: #f9fafb;
+  }
+}
+```
+
+CSS custom properties allow the complete interface to adapt without duplicating the application styling.
+
+---
+
+## 📱 Responsive Design
+
+The application uses:
+
+* CSS Grid
+* Flexible layouts
+* `auto-fit`
+* `minmax()`
+* `clamp()`
+* Responsive spacing
+* Mobile breakpoints
+
+The counter grid automatically adapts to the available screen width.
+
+```css
+.counter-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(260px, 1fr)
+    );
+}
+```
+
+This allows the application to work across desktop, tablet, and smaller screens.
+
+---
+
+## ♿ Accessibility
+
+Accessibility considerations are integrated directly into the application.
+
+Implemented features include:
+
+* Semantic HTML5 structure
+* Native HTML buttons
+* Descriptive `aria-label` values
+* `aria-live="polite"`
+* `aria-atomic="true"`
+* Keyboard controls
+* Keyboard focus support
+* Visible focus indicators
+* Status announcements
+* Responsive text sizing
+* Reduced-motion support
+
+Counter values use live regions:
+
+```html
+<div
+  class="count"
+  aria-live="polite"
+  aria-atomic="true"
+>
+  0
+</div>
+```
+
+Status messages are also announced:
+
+```html
+<p
+  id="status"
+  role="status"
+  aria-live="polite"
+></p>
+```
+
+Users who request reduced motion through their operating system are respected:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration:
+      0.01ms !important;
+
+    animation-duration:
+      0.01ms !important;
+  }
+}
+```
+
+These features demonstrate practical accessibility principles without claiming formal WCAG certification or conformance.
+
+---
+
+## 🛡️ Input Validation and Error Handling
+
+Imported data is validated before being applied.
+
+The application verifies:
+
+* JSON can be parsed
+* `counters` is an array
+* Counter IDs exist
+* Imported values are finite numbers
+
+Invalid files produce user feedback rather than terminating the application.
+
+---
+
+## 🖱️ Modern Event Handling
+
+The application does not use inline `onclick` handlers.
+
+Interactions are registered using `addEventListener()`.
+
+Counter controls use event delegation:
+
+```javascript
+this.element.addEventListener(
+  "click",
+  (event) => {
+    const action =
+      event.target.dataset.action;
+
+    if (!action) {
+      return;
+    }
+
+    if (action === "increase") {
+      this.increase();
+    }
+  }
+);
+```
+
+This keeps behaviour in JavaScript rather than mixing it into HTML markup.
+
+---
+
+## 🧠 JavaScript Concepts Demonstrated
+
+The project demonstrates practical use of:
+
+* Variables and constants
+* Functions
+* Classes
+* Constructors
+* Methods
+* Objects
+* Arrays
+* Maps
+* Template literals
+* Destructuring
+* Spread syntax
+* Arrow functions
+* Array `.map()`
+* Array `.forEach()`
+* Array `.reduce()`
+* DOM manipulation
+* Dynamic DOM creation
+* Event listeners
+* Event delegation
+* Keyboard events
+* Application state
+* Derived state
+* LocalStorage
+* JSON serialization
+* File handling
+* Blob creation
+* Object URLs
+* Async/await
+* Error handling
+* Input validation
+* CSS custom properties
+* Responsive design
+* Accessibility APIs
+
+---
+
+## 🛠️ Technologies
+
+| Technology      | Usage                                             |
+| --------------- | ------------------------------------------------- |
+| HTML5           | Semantic application structure                    |
+| CSS3            | Layout, styling, animations and responsive design |
+| JavaScript ES6+ | Application logic and state management            |
+| DOM API         | Dynamic rendering and interaction                 |
+| Web Storage API | Persistent counter values                         |
+| File API        | JSON file import                                  |
+| Blob API        | JSON file export                                  |
+| ARIA            | Accessible status and value announcements         |
+| Git             | Version control                                   |
+| GitHub          | Source repository                                 |
+| GitHub Pages    | Live deployment                                   |
+
+The application uses **no external runtime dependencies**.
+
+---
+
+## 📂 Project Structure
+
+The project intentionally uses only two source/documentation files:
+
+```text
+advanced-javascript-counter/
+│
+├── index.html
+└── README.md
+```
+
+`index.html` contains:
+
+* HTML structure
+* CSS
+* JavaScript
+* Counter architecture
+* Persistence
+* Dashboard
+* Data import/export
+* Accessibility functionality
+
+Keeping the project in a single application file makes it easy to inspect, run and deploy while the internal JavaScript remains structured and reusable.
+
+---
+
+## 🚀 Getting Started
+
+Clone the repository:
+
+```bash
+git clone https://github.com/abla86/advanced-javascript-counter.git
+```
+
+Move into the project:
+
+```bash
+cd advanced-javascript-counter
+```
+
+Open:
+
+```text
+index.html
+```
+
+in a modern browser.
+
+No installation is required.
+
+---
+
+## 🌐 Deployment
+
+The project is deployed using **GitHub Pages**.
+
+**Live application:**
+
+https://abla86.github.io/advanced-javascript-counter/
+
+The `main` branch is used as the deployment source.
+
+---
+
+## 🎓 From Basic Counter to Advanced Application
+
+The project started from the classic JavaScript counter concept:
+
+```javascript
 let count = 0;
-
-function update() {
-  document.getElementById("count").textContent = count;
-}
 
 function increase() {
   count++;
-  update();
 }
 
 function decrease() {
   count--;
-  update();
 }
+```
 
-This establishes the basic relationship between JavaScript state and the DOM.
+The final application extends that concept through:
 
-2️⃣ Advanced Counter
+**basic state → DOM manipulation → event handling → persistent state → reusable classes → multiple components → keyboard interaction → dynamic styling → animations → accessibility → derived statistics → file import/export → responsive UI**
 
-The current implementation extends the basic counter with:
+This demonstrates how a very small JavaScript exercise can be progressively developed into a substantially more capable frontend application.
 
-addEventListener
-LocalStorage persistence
-Keyboard controls
-Reset functionality
-Negative values
-Dynamic styling
-CSS animations
-Accessibility improvements
-Responsive UI
+---
 
-This turns the original learning exercise into a more complete frontend project.
-
-🌟 Advanced Improvements
-
-The project can continue evolving through several additional frontend concepts.
-
-3️⃣ Multiple Counters
-Why it matters
-
-Multiple counters demonstrate reusable logic, scalable DOM structures, and component-like behaviour.
-
-Example:
-
-<div class="counter">
-  <h3 id="count-1">0</h3>
-  <button data-counter="1" data-change="1">+</button>
-  <button data-counter="1" data-change="-1">-</button>
-</div>
-
-<div class="counter">
-  <h3 id="count-2">0</h3>
-  <button data-counter="2" data-change="1">+</button>
-  <button data-counter="2" data-change="-1">-</button>
-</div>
-
-Possible reusable logic:
-
-const counters = {
-  1: 0,
-  2: 0
-};
-
-function change(id, delta) {
-  counters[id] += delta;
-
-  document.getElementById(
-    `count-${id}`
-  ).textContent = counters[id];
-}
-What this demonstrates
-Reusable logic
-Dynamic DOM selection
-Scalable multi-counter behaviour
-Separation between data and presentation
-4️⃣ ES6 Modules
-
-A future refactor can separate application logic from DOM logic.
-
-counter.js
-export function createCounter(start = 0) {
-  let value = start;
-
-  return {
-    increase() {
-      value++;
-      return value;
-    },
-
-    decrease() {
-      value--;
-      return value;
-    },
-
-    reset() {
-      value = 0;
-      return value;
-    },
-
-    get() {
-      return value;
-    }
-  };
-}
-main.js
-import { createCounter } from "./counter.js";
-
-const counter = createCounter();
-
-document
-  .getElementById("inc")
-  .addEventListener("click", () => {
-    update(counter.increase());
-  });
-HTML
-<script type="module" src="main.js"></script>
-What this demonstrates
-ES6 import / export
-Separation of concerns
-Reusable application logic
-Modern JavaScript architecture
-5️⃣ Multiple Counters & Modular Architecture
-
-Combining reusable counter objects with ES6 modules would allow several independent counters to use the same underlying logic.
-
-This represents the next architectural step from a single-page learning exercise toward a more structured frontend application.
-
-6️⃣ React Component
-
-The same counter concept can later be implemented using React.
-
-import { useState } from "react";
-
-export default function Counter() {
-  const [count, setCount] = useState(0);
-
-  return (
-    <div>
-      <h2>{count}</h2>
-
-      <button
-        onClick={() => setCount(count + 1)}
-      >
-        +
-      </button>
-
-      <button
-        onClick={() => setCount(count - 1)}
-      >
-        -
-      </button>
-
-      <button
-        onClick={() => setCount(0)}
-      >
-        Reset
-      </button>
-    </div>
-  );
-}
-What this demonstrates
-React state
-useState
-Declarative UI
-Component architecture
-Event handling in React
-7️⃣ Unit Testing
-
-Separating counter logic makes it possible to test behaviour independently of the UI.
-
-Example:
-
-counter.js
-export function increase(n) {
-  return n + 1;
-}
-
-export function decrease(n) {
-  return n - 1;
-}
-Example test
-test("increase adds 1", () => {
-  expect(increase(0)).toBe(1);
-});
-
-test("decrease subtracts 1", () => {
-  expect(decrease(1)).toBe(0);
-});
-What this demonstrates
-Testable architecture
-Automated verification
-Predictable application behaviour
-Separation of business logic from the DOM
-8️⃣ Further Accessibility Improvements
-
-Future accessibility work can include:
-
-Visible keyboard focus indicators
-prefers-reduced-motion
-Automated accessibility testing
-Manual keyboard testing
-Screen-reader testing
-Improved semantic structure
-Contrast verification
-
-Accessibility is treated as an ongoing development consideration rather than a one-time feature.
-
-🛠️ Technologies
-Currently used
-HTML5
-CSS3
-JavaScript
-DOM API
-Web Storage API (localStorage)
-ARIA
-
-Planned / Learning Roadmap:
-ES6 Modules
-Automated testing
-React
-TypeScript
-GitHub Actions
-📂 Project Structure
-
-The current project intentionally uses a simple structure:
-
-advanced-javascript-counter/
-├── index.html
-└── README.md
-
-HTML, CSS and JavaScript are currently contained in a single file.
-
-This keeps the initial implementation simple while allowing the project to be refactored into modules as it develops.
-
-🚀 Getting Started
-
-Clone the repository:
-
-git clone https://github.com/abla86/advanced-javascript-counter.git
-
-Open the project:
-
-cd advanced-javascript-counter
-
-Then open:
-
-index.html
-
-in a modern web browser.
-
-No installation, package manager or external dependencies are required for the current version.
-
-🧭 Roadmap:
- Basic counter concept
- Increment and decrement
- Reset functionality
- Negative values
- Event listeners
- Keyboard controls
- LocalStorage persistence
- Dynamic styling
- CSS animation
- Accessibility improvements
- Responsive layout
- Multiple independent counters
- ES6 module refactor
- Automated unit tests
- React implementation
- TypeScript rewrite
- - [x] GitHub Pages live demo
- GitHub Actions CI pipeline
-
-🎯 Project Purpose
-
-This project is part of a practical frontend learning portfolio.
-
-Rather than stopping at a basic counter tutorial, the project demonstrates how a simple application can gradually evolve by introducing:
-
-state → DOM manipulation → events → persistence → keyboard interaction → animation → accessibility → modular architecture → testing → frameworks
-
-The goal is to document both the working application and the development progression behind it.
-
-📜 License
+## 📜 License
 
 MIT License — free to use, modify and share.
